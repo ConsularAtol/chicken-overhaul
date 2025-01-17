@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "consular.chickenoverhaul.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"EggItemMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
