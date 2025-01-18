@@ -35,13 +35,22 @@ import consular.chickenoverhaul.registry.ModBlocks;
 @Mixin(EggItem.class)
 public class EggItemMixin {
 	public ActionResult useOnBlock(ItemUsageContext context) {
-      if (context.getWorld().getBlockState(context.getBlockPos()).isSolidBlock(context.getWorld(), context.getBlockPos())){
-    	   ActionResult actionResult = this.place(new ItemPlacementContext(context));
-    	   return !actionResult.isAccepted() && context.getStack().contains(DataComponentTypes.CONSUMABLE) ? use(context.getWorld(), context.getPlayer(), context.getHand()) : actionResult;
-      } else{
+      World world = context.getWorld();
+      BlockPos blockPos = context.getBlockPos();
+      BlockPos placementPos = blockPos.offset(context.getSide());
+  
+      BlockPos blockBelow = placementPos.down();
+      if (world.getBlockState(blockBelow).isSolidBlock(world, blockBelow)) {
+         ItemPlacementContext placementContext = new ItemPlacementContext(context);
+         ActionResult actionResult = this.place(placementContext);
+  
+         return !actionResult.isAccepted() && context.getStack().contains(DataComponentTypes.CONSUMABLE)
+               ? use(context.getWorld(), context.getPlayer(), context.getHand())
+               : actionResult;
+      } else {
          return ActionResult.FAIL;
       }
-   }
+  }
 
    public ActionResult use(World world, PlayerEntity user, Hand hand) {
       ItemStack itemStack = user.getStackInHand(hand);
