@@ -3,6 +3,7 @@
 	"package": "consular.chickenoverhaul.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"ChickenEntityMixin",
 		"EggItemMixin"
 	],
 	"injectors": {

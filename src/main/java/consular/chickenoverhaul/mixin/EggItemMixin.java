@@ -2,7 +2,6 @@ package consular.chickenoverhaul.mixin;
 
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -31,11 +30,17 @@ import net.minecraft.world.event.GameEvent.Emitter;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
+import consular.chickenoverhaul.registry.ModBlocks;
+
 @Mixin(EggItem.class)
 public class EggItemMixin {
 	public ActionResult useOnBlock(ItemUsageContext context) {
-    	ActionResult actionResult = this.place(new ItemPlacementContext(context));
-    	return !actionResult.isAccepted() && context.getStack().contains(DataComponentTypes.CONSUMABLE) ? use(context.getWorld(), context.getPlayer(), context.getHand()) : actionResult;
+      if (context.getWorld().getBlockState(context.getBlockPos()).isSolidBlock(context.getWorld(), context.getBlockPos())){
+    	   ActionResult actionResult = this.place(new ItemPlacementContext(context));
+    	   return !actionResult.isAccepted() && context.getStack().contains(DataComponentTypes.CONSUMABLE) ? use(context.getWorld(), context.getPlayer(), context.getHand()) : actionResult;
+      } else{
+         return ActionResult.FAIL;
+      }
    }
 
    public ActionResult use(World world, PlayerEntity user, Hand hand) {
@@ -50,7 +55,7 @@ public class EggItemMixin {
    }
 
    public ActionResult place(ItemPlacementContext context) {
-      BlockState blockState = Blocks.TURTLE_EGG.getDefaultState();
+      BlockState blockState = ModBlocks.CHICKEN_EGG.getDefaultState();
       if (!canPlace(context, blockState)) {
          return ActionResult.FAIL;
       } else {
