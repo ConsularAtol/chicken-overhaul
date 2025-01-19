@@ -2,8 +2,10 @@ package consular.chickenoverhaul.mixin;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.AnimalMateGoal;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -14,8 +16,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import consular.chickenoverhaul.ChickenOverhaul;
+import consular.chickenoverhaul.goal.ChickenMateGoal;
 import consular.chickenoverhaul.registry.ModBlocks;
 
 @Mixin(ChickenEntity.class)
@@ -23,6 +26,21 @@ public abstract class ChickenEntityMixin extends AnimalEntity{
 
 	protected ChickenEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    // This is jank as shit but fuck it
+    @Inject(method = "createChild", at = @At("RETURN"))
+    public ChickenEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity, CallbackInfoReturnable<?> ci) {
+        return (ChickenEntity)(Object)this;
+    }
+
+    @Inject(method = "initGoals", at = @At("TAIL"))
+    private void modifyBreedingBehavior(CallbackInfo ci) {
+        // Remove default BreedGoal
+        this.goalSelector.getGoals().removeIf(entry -> entry.getGoal() instanceof AnimalMateGoal);
+
+        // Add custom goal for laying fertilized eggs
+        this.goalSelector.add(2, new ChickenMateGoal((ChickenEntity)(Object)this, 1.0));
     }
 
     @Inject(method = "tickMovement", at = @At("HEAD"), cancellable = true)
@@ -33,7 +51,6 @@ public abstract class ChickenEntityMixin extends AnimalEntity{
         // Check if on the server side and if the chicken is ready to lay an egg
         if (world instanceof ServerWorld && chicken.isAlive() && !chicken.isBaby() && !chicken.hasJockey()) {
             if (--chicken.eggLayTime <= 10) { // We check if it's less than 10 as a janky way to override the original egg laying mechanic
-                ChickenOverhaul.LOGGER.info("Attempting to place egg block");
                 BlockPos blockPos = chicken.getBlockPos(); // Use the chicken's current position
                 BlockState eggBlockState = ModBlocks.CHICKEN_EGG.getDefaultState();
 

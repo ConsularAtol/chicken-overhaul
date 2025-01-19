@@ -4,7 +4,9 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"ChickenEntityMixin",
-		"EggItemMixin"
+		"EggItemMixin",
+		"GoalSelectorAccessor",
+		"GoalSelectorGoalsAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

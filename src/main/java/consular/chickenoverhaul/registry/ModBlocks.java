@@ -15,7 +15,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
 public class ModBlocks {
-    public static final Block CHICKEN_EGG = registerBlock("chicken_egg", ChickenEggBlock::new, Block.Settings.create().mapColor(MapColor.BROWN).strength(0.5F).nonOpaque().pistonBehavior(PistonBehavior.DESTROY).sounds(BlockSoundGroup.METAL));
+    public static final Block CHICKEN_EGG = registerBlock("chicken_egg", ChickenEggBlock::new, Block.Settings.create().mapColor(MapColor.BROWN).strength(0.5F).nonOpaque().ticksRandomly().pistonBehavior(PistonBehavior.DESTROY).sounds(BlockSoundGroup.METAL));
 
     // 1.21.2 more like... fuck you >:(
     private static Block registerBlock(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
@@ -27,6 +27,6 @@ public class ModBlocks {
     }
     
     public static void registerModBlocks(){
-        ChickenOverhaul.LOGGER.info("Registered Blocks");;
+        ChickenOverhaul.LOGGER.info("Registering Blocks");
     }
 }

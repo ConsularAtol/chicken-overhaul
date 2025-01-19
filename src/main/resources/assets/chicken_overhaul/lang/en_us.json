@@ -1,3 +1,5 @@
 {
-    "item.minecraft.egg": "Chicken Egg"
+    "item.minecraft.egg": "Chicken Egg",
+    "chickenoverhaul.chicken_egg.fertilized": "Fertilized",
+    "chickenoverhaul.chicken_egg.unfertilized": "Unfertilized"
 }
