@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import consular.chickenoverhaul.registry.ModBlocks;
 import consular.chickenoverhaul.registry.ModComponentTypes;
+import consular.chickenoverhaul.registry.ModItems;
 
 public class ChickenOverhaul implements ModInitializer {
 	public static final String MOD_ID = "chicken_overhaul";
@@ -17,5 +18,6 @@ public class ChickenOverhaul implements ModInitializer {
 	public void onInitialize() {
 		ModBlocks.registerModBlocks();
 		ModComponentTypes.initialize();
+		ModItems.initialize();
 	}
 }
