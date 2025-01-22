@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "eggs=0": { "model": "chicken_overhaul:block/nesting_box_empty" },
+    "eggs=1": { "model": "chicken_overhaul:block/nesting_box_one_egg" },
+    "eggs=2": { "model": "chicken_overhaul:block/nesting_box_two_eggs" },
+    "eggs=3": { "model": "chicken_overhaul:block/nesting_box_three_eggs" },
+    "eggs=4": { "model": "chicken_overhaul:block/nesting_box_four_eggs" }
+  }
+}

@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import consular.chickenoverhaul.goal.ChickenMateGoal;
+import consular.chickenoverhaul.goal.LayEggInNestingBoxGoal;
 import consular.chickenoverhaul.registry.ModBlocks;
 
 @Mixin(ChickenEntity.class)
@@ -41,6 +42,7 @@ public abstract class ChickenEntityMixin extends AnimalEntity{
 
         // Add custom goal for laying fertilized eggs
         this.goalSelector.add(2, new ChickenMateGoal((ChickenEntity)(Object)this, 1.0));
+        this.goalSelector.add(2, new LayEggInNestingBoxGoal((ChickenEntity) (Object) this, 1.0));
     }
 
     @Inject(method = "tickMovement", at = @At("HEAD"), cancellable = true)

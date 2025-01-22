@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "chicken_overhaul:fried_egg",
+    "chicken_overhaul:fried_egg",
+    "chicken_overhaul:fried_egg",
+    "minecraft:bowl"
+  ],
+  "result": {
+    "count": 1,
+    "id": "chicken_overhaul:scrambled_eggs"
+  }
+}

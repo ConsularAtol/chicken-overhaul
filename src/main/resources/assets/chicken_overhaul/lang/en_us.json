@@ -1,6 +1,8 @@
 {
     "item.minecraft.egg": "Chicken Egg",
     "item.chicken_overhaul.fried_egg": "Fried Egg",
+    "item.chicken_overhaul.scrambled_eggs": "Scrambled Eggs",
+    "block.chicken_overhaul.oak_nesting_box": "Oak Nesting Box",
     "chickenoverhaul.chicken_egg.fertilized": "Fertilized",
     "chickenoverhaul.chicken_egg.unfertilized": "Unfertilized"
 }

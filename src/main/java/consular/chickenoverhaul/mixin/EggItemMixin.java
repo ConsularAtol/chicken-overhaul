@@ -2,6 +2,7 @@ package consular.chickenoverhaul.mixin;
 
 import consular.chickenoverhaul.registry.ModComponentTypes;
 import net.minecraft.advancement.criterion.Criteria;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
@@ -39,6 +40,8 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 import consular.chickenoverhaul.block.ChickenEggBlock;
+import consular.chickenoverhaul.block.NestingBoxBlock;
+import consular.chickenoverhaul.block.entity.NestingBoxBlockEntity;
 import consular.chickenoverhaul.registry.ModBlocks;
 
 @Mixin(EggItem.class)
@@ -48,23 +51,36 @@ public abstract class EggItemMixin extends Item implements ProjectileItem {
       super(settings);
    }
 
-	public ActionResult useOnBlock(ItemUsageContext context) {
-      World world = context.getWorld();
-      BlockPos blockPos = context.getBlockPos();
-      BlockPos placementPos = blockPos.offset(context.getSide());
-  
-      BlockPos blockBelow = placementPos.down();
-      if (world.getBlockState(blockBelow).isSolidBlock(world, blockBelow)) {
-         ItemPlacementContext placementContext = new ItemPlacementContext(context);
-         ActionResult actionResult = this.place(placementContext);
-  
-         return !actionResult.isAccepted() && context.getStack().contains(DataComponentTypes.CONSUMABLE)
-               ? use(context.getWorld(), context.getPlayer(), context.getHand())
-               : actionResult;
-      } else {
-         return ActionResult.FAIL;
-      }
+   @Override
+   public ActionResult useOnBlock(ItemUsageContext context) {
+       World world = context.getWorld();
+       BlockPos blockPos = context.getBlockPos();
+       PlayerEntity player = context.getPlayer();
+       ItemStack stack = context.getStack();
+   
+       if (world.getBlockState(blockPos).getBlock() instanceof NestingBoxBlock) {
+           BlockEntity blockEntity = world.getBlockEntity(blockPos);
+   
+           if (blockEntity instanceof NestingBoxBlockEntity) {
+               NestingBoxBlockEntity nestingBox = (NestingBoxBlockEntity) blockEntity;
+   
+               // Attempt to insert an egg
+               if (nestingBox.insertEgg(stack, stack.getOrDefault(ModComponentTypes.FERTILIZED_COMPONENT, false))) {
+                   stack.decrement(1); // Remove one egg from the player's hand
+                   player.setStackInHand(context.getHand(), stack);
+   
+                   nestingBox.markDirty();
+                   world.updateListeners(blockPos, world.getBlockState(blockPos), world.getBlockState(blockPos), Block.NOTIFY_ALL);
+                   return ActionResult.SUCCESS;
+               } else {
+                   return ActionResult.FAIL; // Inventory is full or item is not an egg
+               }
+           }
+       }
+   
+       return ActionResult.PASS;
    }
+   
   
    @Override
    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {

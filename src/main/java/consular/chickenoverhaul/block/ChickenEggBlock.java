@@ -40,8 +40,8 @@ public class ChickenEggBlock extends Block{
     }
 
     protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (this.shouldHatchProgress(world)) {
-            if (state.get(FERTILIZED)){
+        if (state.get(FERTILIZED)){
+            if (this.shouldHatchProgress(world)) {
                 int i = (Integer)state.get(HATCH);
                 if (i < 2) {
                    world.playSound((PlayerEntity)null, pos, SoundEvents.ENTITY_TURTLE_EGG_CRACK, SoundCategory.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
@@ -51,7 +51,6 @@ public class ChickenEggBlock extends Block{
                     world.playSound((PlayerEntity)null, pos, SoundEvents.ENTITY_TURTLE_EGG_HATCH, SoundCategory.BLOCKS, 0.7F, 0.9F + random.nextFloat() * 0.2F);
                     world.removeBlock(pos, false);
                     world.emitGameEvent(GameEvent.BLOCK_DESTROY, pos, Emitter.of(state));
-
                     for(int j = 0; j < 1; ++j) {
                         world.syncWorldEvent(2001, pos, Block.getRawIdFromState(state));
                         ChickenEntity chickenEntity = (ChickenEntity)EntityType.CHICKEN.create(world, SpawnReason.BREEDING);
@@ -62,8 +61,12 @@ public class ChickenEggBlock extends Block{
                         }
                     }
                 }
-            }else {
-                dropStack(world, pos, new ItemStack(Items.EGG));
+            }
+        }else {
+            if (random.nextInt(4) == 0){
+                ItemStack itemStack = new ItemStack(Items.EGG);
+                itemStack.set(ModComponentTypes.FERTILIZED_COMPONENT, false);
+                dropStack(world, pos, itemStack);
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
             }
         }
